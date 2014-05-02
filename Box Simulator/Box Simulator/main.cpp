@@ -1,8 +1,10 @@
 #include <iostream>
 
+#include "Interface.h"
+
 int main() {
-	std::cout << "Hello cruel world" << std::endl;
-	std::cin.get();
+	Interface interface;
+	interface.start();
 
 	return 0;
 }

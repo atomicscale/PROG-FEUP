@@ -9,7 +9,9 @@ private:
 	long rentedTimes;
 
 public:
-	Movie();
+	Movie(std::string title, double cost);
 	~Movie();
+
+	std::string getTitle();
 };
 

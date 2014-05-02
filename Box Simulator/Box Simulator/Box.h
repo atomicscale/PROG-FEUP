@@ -21,5 +21,10 @@ private:
 public:
 	Box();
 	~Box();
+
+	void loadData();
+	void saveData();
+
+	std::vector<Movie*> getMovies();
 };
 
