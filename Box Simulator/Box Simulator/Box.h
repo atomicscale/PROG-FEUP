@@ -26,5 +26,6 @@ public:
 	void saveData();
 
 	std::vector<Movie*> getMovies();
+	std::vector<Channel*> getChannels();
 };
 

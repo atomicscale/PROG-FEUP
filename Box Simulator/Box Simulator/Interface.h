@@ -12,5 +12,6 @@ public:
 
 	void start();
 	void listMovies();
+	void listChannels();
 };
 

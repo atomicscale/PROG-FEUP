@@ -10,7 +10,9 @@ private:
 	std:: string name;
 	std::vector <Program*> programs;
 public:
-	Channel();
+	Channel(std::string name);
 	~Channel();
+
+	std::string getName();
 };
 
