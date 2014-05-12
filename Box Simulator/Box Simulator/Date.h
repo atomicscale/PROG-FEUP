@@ -17,6 +17,7 @@ private:
 
 public:
 	Date();
+	bool operator < (Date);
 	~Date();
 };
 
