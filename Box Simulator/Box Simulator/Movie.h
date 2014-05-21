@@ -12,6 +12,10 @@ public:
 	Movie(std::string title, double cost);
 	~Movie();
 
-	std::string getTitle();
+	std::string getTitle() const;
+	long getRentedTimes() const { return rentedTimes; }
+	double getCost() const { return cost; }
 };
+
+std::ostream& operator << (std::ostream& out, const Movie& movie);
 

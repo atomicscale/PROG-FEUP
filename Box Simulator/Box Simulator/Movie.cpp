@@ -14,7 +14,14 @@ Movie::~Movie()
 {
 }
 
-std::string Movie::getTitle()
+std::string Movie::getTitle() const
 {
 	return title;
+}
+
+std::ostream& operator<<(std::ostream& out, const Movie& movie)
+{
+	out << movie.getTitle() << " | " << movie.getRentedTimes() << " | " << movie.getCost();
+
+	return out;
 }

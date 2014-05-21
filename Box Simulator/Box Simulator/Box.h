@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <ostream>
 
 #include "Channel.h"
 #include "Movie.h"
@@ -17,10 +18,12 @@ private:
 	std::vector<Program*> recordedPrograms;
 	std::vector<Program*> programsToBeRecorded;
 	double spentMoney;
-	
+
 public:
 	Box();
 	~Box();
+
+	bool saveToFile() const;
 
 	void loadData();
 	void saveData();

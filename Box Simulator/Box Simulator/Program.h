@@ -4,6 +4,7 @@
 #include "Date.h"
 
 enum ProgramType {
+	MOVIE,
 	NEWS,
 	SPORTS,
 	ENTERTAINMENT,
@@ -20,7 +21,10 @@ private:
 	Date exhibitionDate;
 
 public:
-	Program();
+	Program(std::string name,ProgramType type,bool recorded, int duration);
 	~Program();
+
+	std::string getName();
+	
 };
 
