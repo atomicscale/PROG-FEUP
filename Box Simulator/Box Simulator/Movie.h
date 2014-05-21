@@ -15,6 +15,7 @@ public:
 	std::string getTitle() const;
 	long getRentedTimes() const { return rentedTimes; }
 	double getCost() const { return cost; }
+	void incrementRentedTimes();
 };
 
 std::ostream& operator << (std::ostream& out, const Movie& movie);

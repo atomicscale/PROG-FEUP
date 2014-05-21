@@ -12,7 +12,10 @@ public:
 
 	void start();
 	void listMovies();
+	void listUnviewedMovies();
+	void listViewedMovies();
 	void listChannels();
 	void Settings();
+	void rentMovies();
 };
 

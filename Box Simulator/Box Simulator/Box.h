@@ -28,7 +28,10 @@ public:
 	void loadData();
 	void saveData();
 
+	void addToViewedMovies(Movie* movie);
+
 	std::vector<Movie*> getMovies();
+	std::vector<Movie*> getViewedMovies();
 	std::vector<Channel*> getChannels();
 };
 

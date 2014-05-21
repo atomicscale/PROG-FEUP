@@ -112,9 +112,18 @@ void Box::saveData()
 
 }
 
+void Box::addToViewedMovies(Movie* movie) {
+	viewedMovies.push_back(movie);
+}
+
 std::vector<Movie*> Box::getMovies()
 {
 	return movies;
+}
+
+std::vector<Movie*> Box::getViewedMovies()
+{
+	return viewedMovies;
 }
 
 std::vector<Channel*> Box::getChannels()
