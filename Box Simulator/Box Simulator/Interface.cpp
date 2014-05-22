@@ -222,7 +222,6 @@ void Interface::Settings()
 					savePassword(password);
 					std::cout << "Password alterada" << std::endl;
 					clearStdInAndPressEnterToContinue();
-					Settings();
 					break;
 				case 2:
 					manageMovies();
@@ -255,17 +254,17 @@ void Interface::Settings()
 }
 
 bool Interface::savePassword(std::string password){
-	std::ofstream fd;
-	fd.open("data/generalInformation.txt");
-	if (!fd.is_open()) {
+	std::ofstream file;
+	file.open("data/generalInformation.txt");
+	if (!file.is_open()) {
 		std::cout << "Could not open generalInformation.txt" << std::endl;
 		std::cin.get();
 		return false;
 	}
 
-	fd << password << std::endl;
-	fd << box->getMovies().size();
-	fd.close();
+	file << password << std::endl;
+	file << box->getMovies().size();
+	file.close();
 	return true;
 }
 void Interface::manageMovies()

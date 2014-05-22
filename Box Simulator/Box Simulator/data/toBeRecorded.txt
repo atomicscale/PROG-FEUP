@@ -1,9 +1,9 @@
-3
-90 1 jornal
+_*RTP
+90|1|jornal da noite|
 publicidade
 ciclismo
-2
+_*SIC
 dfdf
 fdfd
-1
+_*TVI
 efsfdf
