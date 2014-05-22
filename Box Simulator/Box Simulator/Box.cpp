@@ -1,4 +1,5 @@
 #include "Box.h"
+#include "Utilities.h"
 
 #include <iostream>
 #include <string>
@@ -105,6 +106,8 @@ void Box::loadData()
 	}
 	fin.close();
 	// STOP reading programs recorded
+
+
 }
 
 void Box::saveData()
@@ -114,6 +117,20 @@ void Box::saveData()
 
 void Box::addToViewedMovies(Movie* movie) {
 	viewedMovies.push_back(movie);
+}
+
+void Box::addToMovies(Movie* movie) {
+	movies.push_back(movie);
+}
+
+bool Box::removeMovie(std::string name){
+
+	for (std::vector<Movie*>::const_iterator itr = movies.begin(); itr != movies.end(); itr++)
+	if (ToLower((*itr)->getTitle()).compare(ToLower(name)) == 0) {
+		movies.erase(itr);
+		return true;
+	}
+	return false;
 }
 
 std::vector<Movie*> Box::getMovies()

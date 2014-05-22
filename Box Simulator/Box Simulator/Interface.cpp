@@ -127,7 +127,7 @@ void Interface::listViewedMovies(){
 	std::cout << "Viewed Movies" << std::endl;
 	std::cout << "-------------" << std::endl;
 	for (unsigned int i = 0; i < movies.size(); i++)
-		std::cout << movies[i]->getTitle() << "/t/t Times rented: " << movies[i]->getRentedTimes() << std::endl;
+		std::cout << movies[i]->getTitle() << "\t\t Times rented: " << movies[i]->getRentedTimes() << std::endl;
 	std::cout << std::endl;
 }
 
@@ -220,8 +220,11 @@ void Interface::Settings()
 					std::cout << "Introduce new password" << std::endl;
 					std::cin >> password;
 					std::cout << "Password alterada" << std::endl;
+					clearStdInAndPressEnterToContinue();
 					break;
 				case 2:
+					manageMovies();
+					clearStdInAndPressEnterToContinue();
 					break;
 				case 3:
 					break;
@@ -246,4 +249,24 @@ void Interface::Settings()
 		std::cout << "Wrong Password" << std::endl;
 		clearStdInAndPressEnterToContinue();
 	};
+}
+
+void Interface::manageMovies()
+{
+	//Read Movies
+	listMovies();
+	std::string title;
+	std::cout << "Choose a Movie: ";
+	std::cin.clear();
+	std::cin.ignore(1000, '\n');
+	getline(std::cin,title);
+	//if movie is in the list, delete it
+	if (!box->removeMovie(title)){
+		box->addToMovies(new Movie(title, 10));
+		std::cout << title << " Successfully Added";
+	}
+	else{
+		std::cout << title << " Successfully Deleted";
+	}
+
 }

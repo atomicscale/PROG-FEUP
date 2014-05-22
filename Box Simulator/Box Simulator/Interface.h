@@ -17,5 +17,6 @@ public:
 	void listChannels();
 	void Settings();
 	void rentMovies();
+	void manageMovies();
 };
 

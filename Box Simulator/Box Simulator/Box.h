@@ -29,6 +29,8 @@ public:
 	void saveData();
 
 	void addToViewedMovies(Movie* movie);
+	void addToMovies(Movie* movie);
+	bool removeMovie(std::string name);
 
 	std::vector<Movie*> getMovies();
 	std::vector<Movie*> getViewedMovies();
