@@ -194,9 +194,9 @@ void Interface::Settings()
 		exit(-1);
 	}
 
-	std::string numMovies;
-	fin >> numMovies;
-	if (password == numMovies)
+	std::string ownerpassword;
+	fin >> ownerpassword;
+	if (password == ownerpassword)
 	{
 		do{
 			done = false;
@@ -219,8 +219,10 @@ void Interface::Settings()
 				case 1:
 					std::cout << "Introduce new password" << std::endl;
 					std::cin >> password;
+					savePassword(password);
 					std::cout << "Password alterada" << std::endl;
 					clearStdInAndPressEnterToContinue();
+					Settings();
 					break;
 				case 2:
 					manageMovies();
@@ -234,6 +236,7 @@ void Interface::Settings()
 					std::cout << std::endl;
 					std::cout << "Quitting Settings." << std::endl;
 					done = true;
+					clearStdInAndPressEnterToContinue();
 					break;
 				}
 			}
@@ -251,6 +254,20 @@ void Interface::Settings()
 	};
 }
 
+bool Interface::savePassword(std::string password){
+	std::ofstream fd;
+	fd.open("data/generalInformation.txt");
+	if (!fd.is_open()) {
+		std::cout << "Could not open generalInformation.txt" << std::endl;
+		std::cin.get();
+		return false;
+	}
+
+	fd << password << std::endl;
+	fd << box->getMovies().size();
+	fd.close();
+	return true;
+}
 void Interface::manageMovies()
 {
 	//Read Movies

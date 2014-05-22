@@ -18,5 +18,6 @@ public:
 	void Settings();
 	void rentMovies();
 	void manageMovies();
+	bool savePassword(std::string password);
 };
 
