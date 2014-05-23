@@ -71,15 +71,17 @@ void Box::loadData()
 
 	for (unsigned int i = 0; i < channels.size(); i++) {
 		int numToBeRecorded;
-
 		fin >> numToBeRecorded;
+
+		std::vector<Program*> temp;
 		for (int j = 0; j < numToBeRecorded; j++) {
 			int duration, type, hour, min;
 			std::string title;
 
 			fin >> duration >> min >> hour >> type >> title;
-			programsToBeRecorded.push_back(new Program(title, (ProgramType)type, 0, duration));
+			temp.push_back(new Program(title, (ProgramType)type, 0, duration));
 		}
+		programsToBeRecorded.push_back(temp);
 	}
 	fin.close();
 	// STOP reading programs to be recorded
@@ -139,7 +141,7 @@ std::vector<Movie*> Box::getMovies()
 	return movies;
 }
 
-std::vector<Program*> Box::getProgramsToBeRecorded()
+std::vector<std::vector<Program*> > Box::getProgramsToBeRecorded()
 {
 	return programsToBeRecorded;
 }

@@ -70,7 +70,7 @@ void Interface::start()
 				clearStdInAndPressEnterToContinue();
 				break;
 			case 4:
-				//listChannels();
+				listChannels();
 				clearStdInAndPressEnterToContinue();
 				break;
 			case 5:
@@ -177,22 +177,28 @@ void Interface::listChannels()
 }
 
 void Interface::listProgramsToBeRecorded(){
-	std::vector<Program*> programsToBeRecorded = box->getProgramsToBeRecorded();
+	std::vector<Channel*> channels = box->getChannels();
+	std::vector<std::vector<Program*> > programsToBeRecorded = box->getProgramsToBeRecorded();
 
 	std::cout << std::endl;
 	std::cout << "Programs" << std::endl;
 	std::cout << "--------" << std::endl;
-	for (unsigned int i = 0; i < programsToBeRecorded.size(); i++)
-		std::cout << *programsToBeRecorded[i] << std::endl;
-	std::cout << std::endl;
+	for (unsigned int i = 0; i < channels.size(); i++){
+		std::cout << channels[i]->getName() << " : " << std::endl;
+		for (unsigned int j = 0; j < programsToBeRecorded[i].size(); j++)
+			std::cout << *programsToBeRecorded[i][j] << std::endl;
+	}
 
+	std::string name;
+	std::cout << "Choose a Program to Record: ";
+	std::cin >> name;
 }
 
 void Interface::listRecordedPrograms()
 {
 
 	std::vector<Program*> recordedPrograms = box->getRecordedPrograms();
-	
+
 	std::cout << std::endl;
 	std::cout << "Recorded Programs" << std::endl;
 	std::cout << "--------" << std::endl;
@@ -307,7 +313,7 @@ void Interface::manageMovies()
 	std::cout << "Choose a Movie(Add/Delete): ";
 	std::cin.clear();
 	std::cin.ignore(1000, '\n');
-	getline(std::cin,title);
+	getline(std::cin, title);
 	//if movie is in the list, delete it
 	if (!box->removeMovie(title)){
 		FormatName(title);
