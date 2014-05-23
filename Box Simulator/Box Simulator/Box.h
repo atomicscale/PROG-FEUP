@@ -30,10 +30,14 @@ public:
 
 	void addToViewedMovies(Movie* movie);
 	void addToMovies(Movie* movie);
+	void addToChannels(Channel* name);
 	bool removeMovie(std::string name);
+	bool removeChannel(std::string name);
 
 	std::vector<Movie*> getMovies();
 	std::vector<Movie*> getViewedMovies();
 	std::vector<Channel*> getChannels();
+	std::vector<Program*> getProgramsToBeRecorded();
+	std::vector<Program*> getRecordedPrograms();
 };
 

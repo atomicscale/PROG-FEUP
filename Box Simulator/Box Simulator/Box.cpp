@@ -74,11 +74,11 @@ void Box::loadData()
 
 		fin >> numToBeRecorded;
 		for (int j = 0; j < numToBeRecorded; j++) {
-			int duration, type;
+			int duration, type, hour, min;
 			std::string title;
 
-			fin >> duration >> type >> title;
-			programsToBeRecorded.push_back(new Program(title, (ProgramType) type, 0, duration));
+			fin >> duration >> min >> hour >> type >> title;
+			programsToBeRecorded.push_back(new Program(title, (ProgramType)type, 0, duration));
 		}
 	}
 	fin.close();
@@ -97,10 +97,10 @@ void Box::loadData()
 
 		fin >> numRecorded;
 		for (int j = 0; j < numRecorded; j++) {
-			int duration, type;
+			int duration, type, min, hour;
 			std::string title;
 
-			fin >> duration >> type >> title;
+			fin >> duration >> min >> hour >> type >> title;
 			recordedPrograms.push_back(new Program(title, (ProgramType)type, 1, duration));
 		}
 	}
@@ -127,6 +127,7 @@ bool Box::removeMovie(std::string name){
 
 	for (std::vector<Movie*>::const_iterator itr = movies.begin(); itr != movies.end(); itr++)
 	if (ToLower((*itr)->getTitle()).compare(ToLower(name)) == 0) {
+		std::cout << (*itr)->getTitle() << " Successfully Deleted";
 		movies.erase(itr);
 		return true;
 	}
@@ -136,6 +137,11 @@ bool Box::removeMovie(std::string name){
 std::vector<Movie*> Box::getMovies()
 {
 	return movies;
+}
+
+std::vector<Program*> Box::getProgramsToBeRecorded()
+{
+	return programsToBeRecorded;
 }
 
 std::vector<Movie*> Box::getViewedMovies()
@@ -170,4 +176,25 @@ bool Box::saveToFile() const
 	return
 		writeVector("data/movies.txt", movies) &&
 		writeVector("data/viewedMovies.txt", viewedMovies);
+}
+
+bool Box::removeChannel(std::string name)
+{
+	for (std::vector<Channel*>::const_iterator itr = channels.begin(); itr != channels.end(); itr++)
+	if (ToLower((*itr)->getName()).compare(ToLower(name)) == 0) {
+		std::cout << (*itr)->getName() << " Successfully Deleted";
+		channels.erase(itr);
+		return true;
+	}
+	return false;
+}
+
+void Box::addToChannels(Channel* name)
+{
+	channels.push_back(name);
+}
+
+std::vector<Program*> Box::getRecordedPrograms()
+{
+	return recordedPrograms;
 }

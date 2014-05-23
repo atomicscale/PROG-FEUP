@@ -39,6 +39,7 @@ void Interface::start()
 		std::cout << "1. Unviewed Movies" << std::endl;
 		std::cout << "2. Viewed Movies" << std::endl;
 		std::cout << "3. Rent Movies" << std::endl;
+		std::cout << "Total Spent: \t 0.00 eur" << std::endl;
 		std::cout << std::endl;
 		std::cout << "Channels and Programs" << std::endl;
 		std::cout << "4. List Channels" << std::endl;
@@ -54,7 +55,7 @@ void Interface::start()
 		std::cout << "Choose an option: ";
 		std::cin >> input;
 
-		if (1 <= input && input <= 8) {
+		if (1 <= input && input <= 9) {
 			switch (input) {
 			case 1:
 				listUnviewedMovies();
@@ -73,11 +74,11 @@ void Interface::start()
 				clearStdInAndPressEnterToContinue();
 				break;
 			case 5:
-				//listProgramsToBeRecorded();
+				listProgramsToBeRecorded();
 				clearStdInAndPressEnterToContinue();
 				break;
 			case 6:
-				//listRecordedPrograms();
+				listRecordedPrograms();
 				clearStdInAndPressEnterToContinue();
 				break;
 			case 7:
@@ -175,6 +176,35 @@ void Interface::listChannels()
 	std::cout << std::endl;
 }
 
+void Interface::listProgramsToBeRecorded(){
+	std::vector<Program*> programsToBeRecorded = box->getProgramsToBeRecorded();
+
+	std::cout << std::endl;
+	std::cout << "Programs" << std::endl;
+	std::cout << "--------" << std::endl;
+	for (unsigned int i = 0; i < programsToBeRecorded.size(); i++)
+		std::cout << *programsToBeRecorded[i] << std::endl;
+	std::cout << std::endl;
+
+}
+
+void Interface::listRecordedPrograms()
+{
+
+	std::vector<Program*> recordedPrograms = box->getRecordedPrograms();
+	
+	std::cout << std::endl;
+	std::cout << "Recorded Programs" << std::endl;
+	std::cout << "--------" << std::endl;
+	for (unsigned int i = 0; i < recordedPrograms.size(); i++)
+		std::cout << *recordedPrograms[i] << std::endl;
+	std::cout << std::endl;
+
+}
+
+
+
+
 void Interface::Settings()
 {
 	std::string password;
@@ -220,7 +250,7 @@ void Interface::Settings()
 					std::cout << "Introduce new password" << std::endl;
 					std::cin >> password;
 					savePassword(password);
-					std::cout << "Password alterada" << std::endl;
+					std::cout << "Changed Password Successfully!" << std::endl;
 					clearStdInAndPressEnterToContinue();
 					break;
 				case 2:
@@ -228,6 +258,8 @@ void Interface::Settings()
 					clearStdInAndPressEnterToContinue();
 					break;
 				case 3:
+					manageChannels();
+					clearStdInAndPressEnterToContinue();
 					break;
 				case 4:
 					break;
@@ -272,17 +304,34 @@ void Interface::manageMovies()
 	//Read Movies
 	listMovies();
 	std::string title;
-	std::cout << "Choose a Movie: ";
+	std::cout << "Choose a Movie(Add/Delete): ";
 	std::cin.clear();
 	std::cin.ignore(1000, '\n');
 	getline(std::cin,title);
 	//if movie is in the list, delete it
 	if (!box->removeMovie(title)){
+		FormatName(title);
 		box->addToMovies(new Movie(title, 10));
 		std::cout << title << " Successfully Added";
 	}
+}
+
+void Interface::manageChannels()
+{
+	listChannels();
+	std::string name;
+	std::cout << "Choose a Channel(Add/Delete): ";
+	std::cin.clear();
+	std::cin.ignore(1000, '\n');
+	getline(std::cin, name);
+	if (!box->removeChannel(name)){
+		FormatName(name);
+		box->addToChannels(new Channel(name));
+		std::cout << name << " Successfully Added";
+	}
 	else{
-		std::cout << title << " Successfully Deleted";
+		std::cout << name << " Successfully Deleted";
 	}
 
 }
+
