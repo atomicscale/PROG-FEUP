@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include "Utilities.h"
 
 Interface::Interface()
@@ -74,7 +75,7 @@ void Interface::start()
 				clearStdInAndPressEnterToContinue();
 				break;
 			case 5:
-				listProgramsToBeRecorded();
+				sortBy();
 				clearStdInAndPressEnterToContinue();
 				break;
 			case 6:
@@ -85,6 +86,7 @@ void Interface::start()
 				Settings();
 				break;
 			case 8:
+				box->saveData();
 				std::cout << std::endl;
 				std::cout << "Quitting program." << std::endl;
 				done = true;
@@ -178,7 +180,7 @@ void Interface::listChannels()
 
 void Interface::listProgramsToBeRecorded(){
 	std::vector<Channel*> channels = box->getChannels();
-	std::vector<std::vector<Program*> > programsToBeRecorded = box->getProgramsToBeRecorded();
+	std::vector<std::vector<Program*> > programsToBeRecorded = *box->getProgramsToBeRecorded();
 
 	std::cout << std::endl;
 	std::cout << "Programs" << std::endl;
@@ -188,28 +190,36 @@ void Interface::listProgramsToBeRecorded(){
 		for (unsigned int j = 0; j < programsToBeRecorded[i].size(); j++)
 			std::cout << *programsToBeRecorded[i][j] << std::endl;
 	}
+}
 
-	std::string name;
-	std::cout << "Choose a Program to Record: ";
-	std::cin >> name;
+void Interface::listPrograms(std::vector<std::vector<Program*> > programs){
+	std::vector<Channel*> channels = box->getChannels();
+	std::vector<std::vector<Program*> > programsToBeRecorded = programs;
+
+	std::cout << std::endl;
+	std::cout << "Programs" << std::endl;
+	std::cout << "--------" << std::endl;
+	for (unsigned int i = 0; i < channels.size(); i++){
+		std::cout << channels[i]->getName() << " : " << std::endl;
+		for (unsigned int j = 0; j < programsToBeRecorded[i].size(); j++)
+			std::cout << *programsToBeRecorded[i][j] << std::endl;
+	}
 }
 
 void Interface::listRecordedPrograms()
 {
 
-	std::vector<Program*> recordedPrograms = box->getRecordedPrograms();
+	std::vector<std::vector<Program*> > recordedPrograms = *box->getRecordedPrograms();
 
 	std::cout << std::endl;
 	std::cout << "Recorded Programs" << std::endl;
 	std::cout << "--------" << std::endl;
 	for (unsigned int i = 0; i < recordedPrograms.size(); i++)
-		std::cout << *recordedPrograms[i] << std::endl;
+	for (unsigned int j = 0; j < recordedPrograms[i].size(); j++)
+		std::cout << *recordedPrograms[i][j] << std::endl;
 	std::cout << std::endl;
 
 }
-
-
-
 
 void Interface::Settings()
 {
@@ -268,6 +278,8 @@ void Interface::Settings()
 					clearStdInAndPressEnterToContinue();
 					break;
 				case 4:
+					managePrograms(*box->getProgramsToBeRecorded());
+					clearStdInAndPressEnterToContinue();
 					break;
 				case 5:
 					std::cout << std::endl;
@@ -305,6 +317,7 @@ bool Interface::savePassword(std::string password){
 	file.close();
 	return true;
 }
+
 void Interface::manageMovies()
 {
 	//Read Movies
@@ -335,9 +348,79 @@ void Interface::manageChannels()
 		box->addToChannels(new Channel(name));
 		std::cout << name << " Successfully Added";
 	}
-	else{
-		std::cout << name << " Successfully Deleted";
-	}
 
 }
 
+void Interface::recordPrograms(){
+	std::string channel, program;
+	std::cout << "Choose a Channel: ";
+	std::cin >> channel;
+
+	bool found = false;
+	// search for channel
+	for (unsigned int i = 0; i < box->getChannels().size(); i++) {
+		// channel found
+		if (ToLower(box->getChannels()[i]->getName()).compare(ToLower(channel)) == 0) {
+			std::cout << "Choose a Program to Record: ";
+			std::cin >> program;
+
+			// search for program
+			for (unsigned int j = 0; j < box->getProgramsToBeRecorded()[i].size(); j++) {
+				// program found
+				if (ToLower((*box->getProgramsToBeRecorded())[i][j]->getName()).compare(ToLower(program)) == 0) {
+					std::cout << "Recording: " << (*box->getProgramsToBeRecorded())[i][j]->getName()
+						<< " from " << box->getChannels()[i]->getName() << std::endl;
+
+					box->addToRecordedPrograms(i, (*box->getProgramsToBeRecorded())[i][j]);
+					//box->getProgramsToBeRecorded()[i].erase(box->getProgramsToBeRecorded()[i].begin() + j);
+
+					found = true;
+					break;
+				}
+			}
+		}
+
+
+		if (found)
+			break;
+	}
+}
+
+bool sortByProgramType(Program* p1, Program* p2) {
+	return p1->getType() < p2->getType();
+}
+
+void Interface::sortBy()
+{
+	int type;
+	std::cout << "Sort By Channel (0) or Program Type (1)?" << std::endl;
+	std::cin >> type;
+
+	switch (type)
+	{
+	case 0:
+		listProgramsToBeRecorded();
+		recordPrograms();
+		break;
+	case 1:
+		std::vector<std::vector<Program*> > programsCopy = *box->getProgramsToBeRecorded();
+		for (unsigned int i = 0; i < programsCopy.size(); i++)
+			std::sort(programsCopy[i].begin(), programsCopy[i].end(), sortByProgramType);
+		listPrograms(programsCopy);
+		break;
+	}
+}
+
+void Interface::managePrograms(std::vector<std::vector<Program*> > programs){
+	std::vector<Channel*> channels = box->getChannels();
+	std::vector<std::vector<Program*> > programsToBeRecorded = *box->getProgramsToBeRecorded();
+
+	std::cout << std::endl;
+	std::cout << "Programs" << std::endl;
+	std::cout << "--------" << std::endl;
+	for (unsigned int i = 0; i < channels.size(); i++){
+		std::cout << channels[i]->getName() << " : " << std::endl;
+		for (unsigned int j = 0; j < programsToBeRecorded[i].size(); j++)
+			std::cout << *programsToBeRecorded[i][j] << std::endl;
+	}
+}

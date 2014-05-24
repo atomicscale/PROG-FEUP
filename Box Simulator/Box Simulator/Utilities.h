@@ -3,11 +3,11 @@
 #include <string>
 
 enum ProgramType {
+	ENTERTAINMENT,
+	LIFE_STYLE,
 	MOVIE,
 	NEWS,
-	SPORTS,
-	ENTERTAINMENT,
-	LIFE_STYLE
+	SPORTS
 };
 
 std::string ToLower(std::string str);

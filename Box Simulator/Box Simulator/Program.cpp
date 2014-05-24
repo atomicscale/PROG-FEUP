@@ -17,3 +17,8 @@ Program::~Program()
 std::string Program::getName(){
 	return name;
 }
+
+void Program::incrementRentedTimes()
+{
+	rentedTimes++;
+}

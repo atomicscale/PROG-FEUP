@@ -96,25 +96,92 @@ void Box::loadData()
 
 	for (unsigned int i = 0; i < channels.size(); i++) {
 		int numRecorded;
-
 		fin >> numRecorded;
+
+		std::vector<Program*> temp;
 		for (int j = 0; j < numRecorded; j++) {
 			int duration, type, min, hour;
 			std::string title;
 
 			fin >> duration >> min >> hour >> type >> title;
-			recordedPrograms.push_back(new Program(title, (ProgramType)type, 1, duration));
+			temp.push_back(new Program(title, (ProgramType)type, 1, duration));
 		}
+		recordedPrograms.push_back(temp);
 	}
 	fin.close();
 	// STOP reading programs recorded
-
-
 }
 
 void Box::saveData()
 {
+	// START saving movies
+	std::ofstream fout;
+	fout.open("data/movies.txt");
+	if (!fout) {
+		std::cout << "Could not open movies.txt" << std::endl;
+		std::cin.get();
+		exit(-1);
+	}
 
+	fout << getMovies().size() << std::endl;
+	for (unsigned int i = 0; i < getMovies().size(); i++)
+		fout << getMovies()[i]->getTitle() << std::endl;
+	fout.close();
+	// STOP saving movies
+
+	// START saving channels
+	fout.open("data/channels.txt");
+	if (!fout) {
+		std::cout << "Could not open channels.txt" << std::endl;
+		std::cin.get();
+		exit(-1);
+	}
+
+	fout << getChannels().size() << std::endl;
+	for (unsigned int i = 0; i < getChannels().size(); i++)
+		fout << getChannels()[i]->getName() << std::endl;
+	fout.close();
+	// STOP saving channels
+
+	// START saving programs to be recorded
+	fout.open("data/toBeRecorded.txt");
+	if (!fout) {
+		std::cout << "Could not open toBeRecorded.txt" << std::endl;
+		std::cin.get();
+		exit(-1);
+	}
+
+	for (unsigned int i = 0; i < channels.size(); i++) {
+		fout << (*getProgramsToBeRecorded())[i].size() << std::endl;
+
+		for (unsigned int j = 0; j < (*getProgramsToBeRecorded())[i].size(); j++) {
+			Program* program = (*getProgramsToBeRecorded())[i][j];
+
+			fout << program->getDuration() << " " << 0 << " " << 0 << " " << program->getType() << " " << program->getName() << std::endl;
+		}
+	}
+	fout.close();
+	// STOP saving programs to be recorded
+
+	// START saving programs recorded
+	fout.open("data/recorded.txt");
+	if (!fout) {
+		std::cout << "Could not open recorded.txt" << std::endl;
+		std::cin.get();
+		exit(-1);
+	}
+
+	for (unsigned int i = 0; i < channels.size(); i++) {
+		fout << (*getRecordedPrograms())[i].size() << std::endl;
+
+		for (unsigned int j = 0; j < (*getRecordedPrograms())[i].size(); j++) {
+			Program* program = (*getRecordedPrograms())[i][j];
+
+			fout << program->getDuration() << " " << 0 << " " << 0 << " " << program->getType() << " " << program->getName() << std::endl;
+		}
+	}
+	fout.close();
+	// STOP saving programs recorded
 }
 
 void Box::addToViewedMovies(Movie* movie) {
@@ -124,7 +191,9 @@ void Box::addToViewedMovies(Movie* movie) {
 void Box::addToMovies(Movie* movie) {
 	movies.push_back(movie);
 }
-
+void Box::addToRecordedPrograms(int i, Program* program){
+	recordedPrograms[i].push_back(program);
+}
 bool Box::removeMovie(std::string name){
 
 	for (std::vector<Movie*>::const_iterator itr = movies.begin(); itr != movies.end(); itr++)
@@ -141,9 +210,9 @@ std::vector<Movie*> Box::getMovies()
 	return movies;
 }
 
-std::vector<std::vector<Program*> > Box::getProgramsToBeRecorded()
+std::vector<std::vector<Program*> >* Box::getProgramsToBeRecorded()
 {
-	return programsToBeRecorded;
+	return &programsToBeRecorded;
 }
 
 std::vector<Movie*> Box::getViewedMovies()
@@ -154,30 +223,6 @@ std::vector<Movie*> Box::getViewedMovies()
 std::vector<Channel*> Box::getChannels()
 {
 	return channels;
-}
-
-template <class T>
-bool writeVector(const std::string& fileName, const std::vector<T>& vector) {
-	std::ofstream out(fileName);
-
-	if (!out.is_open())
-		return false;
-
-	out << vector.size() << std::endl;
-
-	for (std::vector<T>::const_iterator it = vector.begin(); it != vector.end(); it++)
-		out << *it << std::endl;
-
-	out.close();
-
-	return true;
-}
-
-bool Box::saveToFile() const
-{
-	return
-		writeVector("data/movies.txt", movies) &&
-		writeVector("data/viewedMovies.txt", viewedMovies);
 }
 
 bool Box::removeChannel(std::string name)
@@ -194,9 +239,13 @@ bool Box::removeChannel(std::string name)
 void Box::addToChannels(Channel* name)
 {
 	channels.push_back(name);
+
+	std::vector<Program*> temp;
+	getProgramsToBeRecorded()->push_back(temp);
+	getRecordedPrograms()->push_back(temp);
 }
 
-std::vector<Program*> Box::getRecordedPrograms()
+std::vector<std::vector<Program*> >* Box::getRecordedPrograms()
 {
-	return recordedPrograms;
+	return &recordedPrograms;
 }
